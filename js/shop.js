@@ -344,28 +344,36 @@ function submitCustomerDetails() {
 }
 
 $(document).ready(function() {
-    $('#custCountry').select2({
-        placeholder: "Search your country",
-        allowClear: true
-    });
+	$('#custCountry').select2({
+		placeholder: "Search your country",
+		allowClear: true
+	});
 });
 
 const country = document.getElementById("custCountry");
 const emirate = document.getElementById("custEmirate");
 
+function toggleEmirate() {
+	if (country.value === "United Arab Emirates") {
+		emirate.style.display = "block";
+		emirate.disabled = false;
+	} else {
+		emirate.style.display = "none";
+		emirate.disabled = true;
+		emirate.selectedIndex = 0;
+	}
+}
+
 country.addEventListener("change", function () {
-    if (this.value === "United Arab Emirates") {
-        emirate.style.display = "block";
-    } else {
-        emirate.disabled = true;
-        emirate.selectedIndex = 0; // reset
-    }
+	toggleEmirate();
 });
+
+toggleEmirate(); // Initial check on page load
 
 
 document.addEventListener('contextmenu', function(e) {
   if (e.target.tagName === 'IMG') {
-    e.preventDefault(); // block right-click on images
+	e.preventDefault(); // block right-click on images
   }
 });
 
@@ -373,28 +381,28 @@ document.addEventListener('contextmenu', e => e.preventDefault()); // block righ
 document.addEventListener('dragstart', e => e.preventDefault());   // block drag
 
 document.addEventListener('keydown', function(e) {
-    // F12
-    if (e.key === 'F12') {
-        e.preventDefault();
-    }
-    
-    // Ctrl + Shift + I (Windows/Linux) or Cmd + Option + I (Mac)
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'i') {
-        e.preventDefault();
-    }
+	// F12
+	if (e.key === 'F12') {
+		e.preventDefault();
+	}
 
-    // Ctrl + Shift + C (select element)
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'c') {
-        e.preventDefault();
-    }
+	// Ctrl + Shift + I (Windows/Linux) or Cmd + Option + I (Mac)
+	if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'i') {
+		e.preventDefault();
+	}
 
-    // Ctrl + Shift + J (console)
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'j') {
-        e.preventDefault();
-    }
+	// Ctrl + Shift + C (select element)
+	if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'c') {
+		e.preventDefault();
+	}
 
-    // Ctrl + U (view source)
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'u') {
-        e.preventDefault();
-    }
+	// Ctrl + Shift + J (console)
+	if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'j') {
+		e.preventDefault();
+	}
+
+	// Ctrl + U (view source)
+	if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'u') {
+		e.preventDefault();
+	}
 });
