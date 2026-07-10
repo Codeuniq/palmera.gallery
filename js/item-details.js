@@ -73,14 +73,26 @@ function changeImage(el) {
    ======================= */
 
 let selectedSize = "N/A";
+let selectedSizeAvailableQty = 0;
 
-function selectSize(el, size) {
-	document.querySelectorAll(".size-circle").forEach(s => s.classList.remove("active"));
+function selectSize(el, size, availableQty) {
+	if (availableQty <= 0) return;
+
+	document.querySelectorAll(".size-circle").forEach(s => {
+		s.classList.remove("active");
+	});
+
 	el.classList.add("active");
+
 	selectedSize = size;
+	selectedSizeAvailableQty = Number(availableQty);
+
 	document.getElementById("selectedSize").value = size;
 
-	// Enable the button once a size is picked
+	// Reset quantity when changing size
+	quantity = 1;
+	document.getElementById("qty").innerText = quantity;
+
 	document.getElementById("addToCartBtn").disabled = false;
 }
 
@@ -118,13 +130,38 @@ function add_to_cart(el) {
 		price: Number(item_price),
 		image: item_image,
 		qty: Number(qty),
-		size: item_size
+		size: item_size,
+		available_qty: selectedSizeAvailableQty
 	};
 
-	const existing = cart.find(item => item.id === item_data.id && item.size === item_data.size);
+	const existing = cart.find(
+		item => item.id === item_data.id && item.size === item_data.size
+	);
+
+	const existingQty = existing ? Number(existing.qty) : 0;
+	const requestedQty = Number(qty);
+	const totalQty = existingQty + requestedQty;
+
+	if (totalQty > selectedSizeAvailableQty) {
+		const remainingQty = selectedSizeAvailableQty - existingQty;
+
+		if (remainingQty <= 0) {
+			showToast(
+				`Maximum available quantity for size ${item_size} is already in your cart`,
+				"error"
+			);
+		} else {
+			showToast(
+				`You can add only ${remainingQty} more for size ${item_size}`,
+				"error"
+			);
+		}
+
+		return;
+	}
 
 	if (existing) {
-		existing.qty += Number(qty);
+		existing.qty += requestedQty;
 	} else {
 		cart.push(item_data);
 	}
@@ -309,8 +346,24 @@ window.showToast = function (message, type = "success") {
 
 function updateQty(index, change) {
 	let cart = getCart();
-	cart[index].qty += change;
-	if (cart[index].qty <= 0) cart.splice(index, 1);
+	const item = cart[index];
+
+	const newQty = item.qty + change;
+
+	if (newQty > item.available_qty) {
+		showToast(
+			`Only ${item.available_qty} quantity available for size ${item.size}`,
+			"error"
+		);
+		return;
+	}
+
+	if (newQty <= 0) {
+		cart.splice(index, 1);
+	} else {
+		item.qty = newQty;
+	}
+
 	saveCart(cart);
 	updateCartCount();
 	renderCart();
@@ -350,11 +403,13 @@ function productDetailsTemplate(product) {
 
 	const sizeOptions = product.sizes?.length
 		? product.sizes.map(size => `
-		<div class="size-circle ${size.qty === 0 ? 'disabled' : ''}"
-			 onclick="selectSize(this, '${size.size}')">
-		  ${size.size}
-		</div>
-	  `).join("")
+			<div
+				class="size-circle ${Number(size.qty) === 0 ? 'disabled' : ''}"
+				onclick="selectSize(this, '${size.size}', ${Number(size.qty)})"
+			>
+				${size.size}
+			</div>
+		`).join("")
 		: '<span>No sizes available</span>';
 
 	const images = product.images?.length
@@ -403,8 +458,21 @@ function productDetailsTemplate(product) {
 }
 
 function changeQty(val) {
-	quantity += val;
-	if (quantity < 1) quantity = 1;
+	const newQuantity = quantity + val;
+
+	if (newQuantity < 1) {
+		return;
+	}
+
+	if (newQuantity > selectedSizeAvailableQty) {
+		showToast(
+			`Only ${selectedSizeAvailableQty} quantity available for size ${selectedSize}`,
+			"error"
+		);
+		return;
+	}
+
+	quantity = newQuantity;
 	document.getElementById("qty").innerText = quantity;
 }
 
@@ -442,7 +510,7 @@ function productCardTemplate(product, index) {
 					</p>
 				</div>
 			</div>
-			<div class="text p-2 pt-0" onclick="window.location.href='item-details.html?code=${encodeURIComponent(item_code)}'" style="cursor:pointer;">
+			<div class="text p-2 pt-0" onclick="window.location.href='item-details.html?code=${encodeURIComponent(item_code).replace(/'/g, "%27")}'" style="cursor:pointer;">
 				<h2 style="display:none;">${item_code}</h2>
 				<h3>${item_name}</h3>
 				<div class="d-flex margb">
