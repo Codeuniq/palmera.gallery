@@ -18959,3 +18959,22 @@ button:active {
 	background: linear-gradient(135deg, #d50000, #ff5252);
 }
 
+.field-wrap {
+	position: relative;
+	flex: 1; /* keeps flex-row inputs (first/last name, emirate/post code) sized correctly */
+}
+
+.field-wrap.required-field::before {
+	content: "*";
+	color: #d9363e;
+	font-size: 18px;
+	font-weight: 700;
+	position: absolute;
+	top: -10px;
+	left: 14px;
+	background: #fff;
+	padding: 0 4px;
+	line-height: 1;
+	z-index: 1;
+	pointer-events: none;
+}

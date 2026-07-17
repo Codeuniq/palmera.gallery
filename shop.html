@@ -358,14 +358,24 @@
             </div>
 
             <div class="d-flex" style="gap:10px;">
-                <input type="text" id="custFirstName" placeholder="First name">
+            <div class="field-wrap required-field">
+                <input type="text" id="custFirstName" placeholder="First name" required>
+            </div>
+            <div class="field-wrap">
                 <input type="text" id="custLastName" placeholder="Last name">
             </div>
+        </div>
 
-            <input type="text" id="custAddress" placeholder="Address">
+        <div class="field-wrap required-field">
+            <input type="text" id="custAddress" placeholder="Address" required>
+        </div>
+
+        <div class="field-wrap">
             <input type="text" id="custApartment" placeholder="Apartment, suite, etc. (optional)">
+        </div>
 
-            <div class="d-flex" style="gap:10px;">
+        <div class="d-flex" style="gap:10px;">
+            <div class="field-wrap">
                 <select id="custEmirate">
                     <option value="" selected>Select Emirate</option>
                     <option value="Dubai">Dubai</option>
@@ -376,23 +386,28 @@
                     <option value="Ras Al Khaimah">Ras Al Khaimah</option>
                     <option value="Fujairah">Fujairah</option>
                 </select>
-
-
+            </div>
+            <div class="field-wrap">
                 <input type="text" id="custPost" placeholder="Post Code">
             </div>
+        </div>
 
-            <input type="text" id="custCity" placeholder="City">
+        <div class="field-wrap required-field">
+            <input type="text" id="custCity" placeholder="City" required>
+        </div>
 
-            <input type="text" id="custMobile" placeholder="Phone">
+        <div class="field-wrap required-field">
+            <input type="text" id="custMobile" placeholder="Phone" required>
+        </div>
 
-            <label class="checkbox">
-                <input type="checkbox" id="saveInfo"> Save this information for next time
-            </label>
+        <label class="checkbox">
+            <input type="checkbox" id="saveInfo"> Save this information for next time
+        </label>
 
-            <div class="popup-actions modern">
-                <button class="btn primary" onclick="submitCustomerDetails()">Continue</button>
-                <button class="btn secondary" onclick="closeCustomerPopup()">Cancel</button>
-            </div>
+        <div class="popup-actions modern">
+            <button class="btn primary" onclick="submitCustomerDetails()">Continue</button>
+            <button class="btn secondary" onclick="closeCustomerPopup()">Cancel</button>
+        </div>
 
         </div>
     </div>
@@ -421,18 +436,22 @@
             <div class="tab-content pt-4">
 
                 <div class="tab-pane fade show active" id="shemagh">
+                    <div class="subcat-pills mb-3" id="shemagh_subcats"></div>
                     <div class="row" id="shemagh_items"></div>
                 </div>
 
                 <div class="tab-pane fade" id="shawl">
+                    <div class="subcat-pills mb-3" id="shawl_subcats"></div>
                     <div class="row" id="shawl_items"></div>
                 </div>
 
                 <div class="tab-pane fade" id="thobe">
+                    <div class="subcat-pills mb-3" id="thobe_subcats"></div>
                     <div class="row" id="thobe_items"></div>
                 </div>
 
                 <div class="tab-pane fade" id="inner">
+                    <div class="subcat-pills mb-3" id="inner_subcats"></div>
                     <div class="row" id="inner_items"></div>
                 </div>
 
