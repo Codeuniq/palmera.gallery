@@ -1,9 +1,9 @@
 const sliderState = {};
+const categoryProducts = {}; // holds products grouped by category, for client-side filtering
 const API_BASE_URL = CONFIG.API_BASE_URL
 
 /* LOAD PRODUCTS */
 function load_items() {
-	// Iniatial page load
 	updateCartCount();
 	$.ajax({
 		url: `${API_BASE_URL}/api/method/frappe_ecommerce.apis.api.get_all_products`,
@@ -11,24 +11,84 @@ function load_items() {
 		dataType: "json",
 		success: function (res) {
 			const products = res.data || [];
-			// Clear all tabs
-			["shemagh", "shawl", "thobe", "inner"].forEach(cat => {
-				const el = document.getElementById(`${cat}_items`);
-				if (el) el.innerHTML = "";
+			const categories = ["shemagh", "shawl", "thobe", "inner"];
+
+			// Clear all tabs + pill containers, reset grouping
+			categories.forEach(cat => {
+				const itemsEl = document.getElementById(`${cat}_items`);
+				const pillsEl = document.getElementById(`${cat}_subcats`);
+				if (itemsEl) itemsEl.innerHTML = "";
+				if (pillsEl) pillsEl.innerHTML = "";
+				categoryProducts[cat] = [];
 			});
 
-			products.forEach((product, index) => {
+			products.forEach(product => {
 				const category = product.item_category?.toLowerCase();
-				const container = document.getElementById(`${category}_items`);
-				if (!container) return;
+				if (!categoryProducts[category]) return; // unknown category, skip
+				categoryProducts[category].push(product);
+			});
 
-				container.insertAdjacentHTML(
-					"beforeend",
-					productCardTemplate(product, index)
-				);
+			categories.forEach(cat => {
+				renderSubcategoryPills(cat);
+				renderProducts(cat, "all");
 			});
 		},
 		error: err => console.error("API Error", err)
+	});
+}
+
+/* RENDER SUB-CATEGORY PILLS FOR A TAB */
+function renderSubcategoryPills(category) {
+	const pillsEl = document.getElementById(`${category}_subcats`);
+	if (!pillsEl) return;
+
+	const items = categoryProducts[category] || [];
+
+	// unique, non-empty sub-categories, in first-seen order
+	const subcats = [];
+	items.forEach(p => {
+		const sc = p.item_sub_category;
+		if (sc && !subcats.includes(sc)) subcats.push(sc);
+	});
+
+	if (!subcats.length) {
+		pillsEl.innerHTML = "";
+		return;
+	}
+
+	let html = `<span class="subcat-pill active" data-subcat="all" onclick="filterBySubcategory('${category}', 'all', this)">All</span>`;
+	subcats.forEach(sc => {
+		html += `<span class="subcat-pill" data-subcat="${sc}" onclick="filterBySubcategory('${category}', '${sc.replace(/'/g, "\\'")}', this)">${sc}</span>`;
+	});
+
+	pillsEl.innerHTML = html;
+}
+
+/* FILTER PRODUCTS WHEN A PILL IS CLICKED */
+function filterBySubcategory(category, subcat, btnEl) {
+	// toggle active pill styling
+	const pillsEl = document.getElementById(`${category}_subcats`);
+	if (pillsEl) {
+		pillsEl.querySelectorAll(".subcat-pill").forEach(p => p.classList.remove("active"));
+	}
+	if (btnEl) btnEl.classList.add("active");
+
+	renderProducts(category, subcat);
+}
+
+/* RENDER PRODUCT CARDS FOR A CATEGORY, OPTIONALLY FILTERED BY SUBCATEGORY */
+function renderProducts(category, subcat) {
+	const container = document.getElementById(`${category}_items`);
+	if (!container) return;
+
+	const items = categoryProducts[category] || [];
+	const filtered = subcat === "all"
+		? items
+		: items.filter(p => p.item_sub_category === subcat);
+
+	container.innerHTML = "";
+	filtered.forEach((product, index) => {
+		container.insertAdjacentHTML("beforeend", productCardTemplate(product, `${category}_${index}`));
 	});
 }
 
@@ -37,6 +97,7 @@ function productCardTemplate(product, index) {
 	const price = product.item_price || "0.00";
 	const item_code = product.name || "";
 	const item_name = product.item_name || "";
+	const item_subcat = product.item_sub_category || "";
 
 	const images = product.images?.length
 		? product.images
@@ -47,7 +108,7 @@ function productCardTemplate(product, index) {
   `).join("");
 
 	return `
-	<div class="col-6 col-md-4 col-lg-3 mb-4 d-flex">
+	<div class="col-6 col-md-4 col-lg-3 mb-4 d-flex" data-subcategory="${item_subcat}">
 		<div class="product w-100">
 			<div class="carousels" data-index="${index}">
 				<div class="carousel_slider">
@@ -55,7 +116,7 @@ function productCardTemplate(product, index) {
 						${imageSlides}
 					</div>
 					
-					<button class="prev_button PRBTN" onclick="slidePrev(${index})">
+					<button class="prev_button PRBTN" onclick="slidePrev('${index}')">
 					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
 								fill="currentColor" class="bi bi-caret-left-fill"
 								viewBox="0 0 16 16">
@@ -63,7 +124,7 @@ function productCardTemplate(product, index) {
 								d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
 							</svg>
 					</button>
-					<button class="next_button PRBTN" onclick="slideNext(${index})">
+					<button class="next_button PRBTN" onclick="slideNext('${index}')">
 					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
 									fill="currentColor" class="bi bi-caret-right-fill"
 									viewBox="0 0 16 16">
@@ -290,7 +351,7 @@ function submitCustomerDetails() {
 	const city = document.getElementById("custCity").value;
 	const post = document.getElementById("custPost").value.trim();
 
-	if (!firstName || !mobile || !address) {
+	if (!firstName || !mobile || !address || !city) {
 		showToast("Please fill required fields", "error");
 		return;
 	}
@@ -355,10 +416,8 @@ const emirate = document.getElementById("custEmirate");
 
 function toggleEmirate() {
 	if (country.value === "United Arab Emirates") {
-		emirate.style.display = "block";
 		emirate.disabled = false;
 	} else {
-		emirate.style.display = "none";
 		emirate.disabled = true;
 		emirate.selectedIndex = 0;
 	}
@@ -406,3 +465,18 @@ document.addEventListener('keydown', function(e) {
 		e.preventDefault();
 	}
 });
+
+window.showToast = function (message, type = "success") {
+	const toast = document.createElement("div");
+	toast.className = `toast-msg toast-${type}`;
+	toast.innerText = message;
+
+	document.body.appendChild(toast);
+
+	setTimeout(() => toast.classList.add("show"), 50);
+
+	setTimeout(() => {
+		toast.classList.remove("show");
+		setTimeout(() => toast.remove(), 300);
+	}, 3000);
+};

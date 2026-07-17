@@ -140,12 +140,10 @@
 
 	<!-- CUSTOMER DETAILS POPUP -->
 	<div id="customerPopup" class="popup-overlay">
-		<div class="popup-box modern">
-
-			<h2 class="popup-title">Shipping Address</h2>
-
-			<div class="form-group">
-				<select id="custCountry" style="width:100%">
+        <div class="popup-box modern">
+            <h2 class="popup-title">Shipping Address</h2>
+            <div class="form-group">
+                <select id="custCountry" style="width:100%">
                     <option value="" selected>Select Country</option>
 
                     <option>Afghanistan</option>
@@ -335,19 +333,29 @@
                     <option>Zambia</option>
                     <option>Zimbabwe</option>
                 </select>
-			</div>
+            </div>
 
-			<div class="d-flex" style="gap:10px;">
-				<input type="text" id="custFirstName" placeholder="First name">
-				<input type="text" id="custLastName" placeholder="Last name">
-			</div>
+            <div class="d-flex" style="gap:10px;">
+            <div class="field-wrap required-field">
+                <input type="text" id="custFirstName" placeholder="First name" required>
+            </div>
+            <div class="field-wrap">
+                <input type="text" id="custLastName" placeholder="Last name">
+            </div>
+        </div>
 
-			<input type="text" id="custAddress" placeholder="Address">
-			<input type="text" id="custApartment" placeholder="Apartment, suite, etc. (optional)">
+        <div class="field-wrap required-field">
+            <input type="text" id="custAddress" placeholder="Address" required>
+        </div>
 
-			<div class="d-flex" style="gap:10px;">
-				<select id="custEmirate">
-					<option value="" selected>Select Emirate</option>
+        <div class="field-wrap">
+            <input type="text" id="custApartment" placeholder="Apartment, suite, etc. (optional)">
+        </div>
+
+        <div class="d-flex" style="gap:10px;">
+            <div class="field-wrap">
+                <select id="custEmirate">
+                    <option value="" selected>Select Emirate</option>
                     <option value="Dubai">Dubai</option>
                     <option value="Abu Dhabi">Abu Dhabi</option>
                     <option value="Sharjah">Sharjah</option>
@@ -355,26 +363,32 @@
                     <option value="Umm Al Quwain">Umm Al Quwain</option>
                     <option value="Ras Al Khaimah">Ras Al Khaimah</option>
                     <option value="Fujairah">Fujairah</option>
-				</select>
+                </select>
+            </div>
+            <div class="field-wrap">
+                <input type="text" id="custPost" placeholder="Post Code">
+            </div>
+        </div>
 
-				<input type="text" id="custPost" placeholder="Post Code">
-			</div>
+        <div class="field-wrap required-field">
+            <input type="text" id="custCity" placeholder="City" required>
+        </div>
 
-			<input type="text" id="custCity" placeholder="City">
-			
-			<input type="text" id="custMobile" placeholder="Phone">
+        <div class="field-wrap required-field">
+            <input type="text" id="custMobile" placeholder="Phone" required>
+        </div>
 
-			<label class="checkbox">
-				<input type="checkbox" id="saveInfo"> Save this information for next time
-			</label>
+        <label class="checkbox">
+            <input type="checkbox" id="saveInfo"> Save this information for next time
+        </label>
 
-			<div class="popup-actions modern">
-				<button class="btn primary" onclick="submitCustomerDetails()">Continue</button>
-				<button class="btn secondary" onclick="closeCustomerPopup()">Cancel</button>
-			</div>
+        <div class="popup-actions modern">
+            <button class="btn primary" onclick="submitCustomerDetails()">Continue</button>
+            <button class="btn secondary" onclick="closeCustomerPopup()">Cancel</button>
+        </div>
 
-		</div>
-	</div>
+        </div>
+    </div>
 	<!-- CUSTOMER DEATILS POPUP END -->
 
 	<section class="ftco-section contact-section bg-light" loading="lazy">

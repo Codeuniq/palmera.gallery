@@ -18616,3 +18616,69 @@ button:active {
 	margin-left: 10px;
 }
 
+.subcat-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+.subcat-pill {
+	padding: 6px 16px;
+	border-radius: 20px;
+	border: 1px solid #ccc;
+	background: #fff;
+	font-size: 13px;
+	cursor: pointer;
+	user-select: none;
+	transition: all 0.2s;
+}
+.subcat-pill.active {
+	background: #000;
+	color: #fff;
+	border-color: #000;
+}
+
+.toast-msg {
+	position: fixed;
+	top: 20px;
+	left: 50%;
+	transform: translateX(-50%) translateY(-20px);
+	background: #333;
+	color: #fff;
+	padding: 12px 24px;
+	border-radius: 6px;
+	font-size: 14px;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.3s ease, transform 0.3s ease;
+	z-index: 999999; /* higher than modal + any overlay */
+}
+.toast-msg.show {
+	opacity: 1;
+	transform: translateX(-50%) translateY(0);
+}
+.toast-error {
+	background: #d9363e;
+}
+.toast-success {
+	background: #2e7d32;
+}
+
+.field-wrap {
+	position: relative;
+	flex: 1; /* keeps flex-row inputs (first/last name, emirate/post code) sized correctly */
+}
+
+.field-wrap.required-field::before {
+	content: "*";
+	color: #d9363e;
+	font-size: 18px;
+	font-weight: 700;
+	position: absolute;
+	top: -10px;
+	left: 14px;
+	background: #fff;
+	padding: 0 4px;
+	line-height: 1;
+	z-index: 1;
+	pointer-events: none;
+}

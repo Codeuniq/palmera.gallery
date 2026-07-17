@@ -276,7 +276,7 @@ function submitCustomerDetails() {
 	const emirate = document.getElementById("custEmirate").value;
 	const city = document.getElementById("custCity").value;
 
-	if (!firstName || !mobile || !address) {
+	if (!firstName || !mobile || !address || !city) {
 		showToast("Please fill required fields", "error");
 		return;
 	}
@@ -544,10 +544,8 @@ const emirate = document.getElementById("custEmirate");
 
 function toggleEmirate() {
 	if (country.value === "United Arab Emirates") {
-		emirate.style.display = "block";
 		emirate.disabled = false;
 	} else {
-		emirate.style.display = "none";
 		emirate.disabled = true;
 		emirate.selectedIndex = 0;
 	}
