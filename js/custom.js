@@ -583,3 +583,4 @@ country.addEventListener("change", function () {
 });
 
 toggleEmirate(); // Initial check on page load
+updateCartCount(); // Initial check
