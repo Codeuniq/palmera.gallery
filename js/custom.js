@@ -323,3 +323,263 @@ document.addEventListener('keydown', function(e) {
         e.preventDefault();
     }
 });
+
+//CART SECTION
+function openCart() {
+	document.getElementById("cartModal").style.display = "flex";
+}
+
+function closeCart() {
+	document.getElementById("cartModal").style.display = "none";
+}
+
+function removeItem(el) {
+	el.closest(".cart-item").remove();
+	updateTotal();
+}
+
+
+// Calculate total (static demo)
+function updateTotal() {
+	let items = document.querySelectorAll(".cart-item");
+	let total = 0;
+	items.forEach(item => {
+		let price = parseFloat(item.querySelector(".item-info p").innerText.replace("$", ""));
+		let qty = parseInt(item.querySelector(".qty span").innerText);
+		total += price * qty;
+	});
+	document.getElementById("cartTotal").innerText = `$${total.toFixed(2)}`;
+}
+
+function getCart() {
+	return JSON.parse(localStorage.getItem("cart")) || [];
+}
+
+function saveCart(cart) {
+	localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function open_cart_popup() {
+	renderCart();
+	document.getElementById("cartModal").style.display = "flex";
+}
+
+function closeCart() {
+	document.getElementById("cartModal").style.display = "none";
+}
+
+function renderCart() {
+	const cart = getCart();
+	const container = document.querySelector(".cart-items");
+	const totalEl = document.querySelector(".cart-footer .total strong");
+	const checkoutBtn = document.getElementById("checkout");
+
+	container.innerHTML = "";
+	let total = 0;
+
+	if (!cart.length) {
+		container.innerHTML = "<p style='text-align:center'>Cart is empty</p>";
+		totalEl.innerHTML = "0.00";
+		checkoutBtn.style.pointerEvents = "none";  // ← disable
+		checkoutBtn.style.opacity = "0.4";          // ← dim it
+		return;
+	}
+	// Re-enable when cart has items
+	checkoutBtn.style.pointerEvents = "auto";
+	checkoutBtn.style.opacity = "1";
+
+	cart.forEach((item, index) => {
+		let item_total = item.price * item.qty;
+		total += item_total;
+
+		container.innerHTML += `
+		<div class="cart-item">
+			<div class="cart-gallery">
+				<img src="${item.image}" class="main-img">
+			</div>
+
+			<div class="item-info">
+				<h4>${item.name}</h4>
+				<h5 style="color: #000;">Size : ${item.size}</h5>
+				<div class="price-qty">
+					<p class="price">
+						<img src="images/aed.webp" style="height:15px;margin-top:-4px;padding-right:2px;">
+						<span>${item.price.toFixed(2)}</span>
+					</p>
+
+					<div class="qty modern-qty">
+						<button onclick="updateQty(${index}, -1)">-</button>
+						<span class="qty-num">${item.qty}</span>
+						<button onclick="updateQty(${index}, 1)">+</button>
+					</div>
+				</div>
+			</div>
+
+		  <span class="remove" onclick="removeItem(${index})">&times;</span>
+		</div>
+	  `;
+	});
+
+	totalEl.innerHTML = `
+	  <img src="images/aed.webp" style="height:12px;margin-top:-4px;padding-right:2px;">
+	  ${total.toFixed(2)}
+	`;
+
+	document.getElementById("checkout").onclick = function (e) {
+		e.preventDefault();
+		openCustomerPopup();
+	};
+}
+
+function updateQty(index, change) {
+	let cart = getCart();
+	cart[index].qty += change;
+
+	if (cart[index].qty <= 0) {
+		cart.splice(index, 1);
+	}
+
+	saveCart(cart);
+	updateCartCount();
+	renderCart();
+}
+
+function removeItem(index) {
+	let cart = getCart();
+	cart.splice(index, 1);
+	saveCart(cart);
+	updateCartCount();
+	renderCart();
+}
+
+function updateCartCount() {
+	const cart = JSON.parse(localStorage.getItem("cart")) || [];
+	const cartCountEl1 = document.getElementById("cartCount1");
+	const cartCountEl2 = document.getElementById("cartCount2");
+
+	const totalQty = cart.length;
+
+	if (totalQty > 0) {
+		cartCountEl1.textContent = totalQty;
+		cartCountEl2.textContent = totalQty;
+		cartCountEl1.style.display = "flex";
+		cartCountEl2.style.display = "flex";
+	} else {
+		cartCountEl1.style.display = "none";
+		cartCountEl2.style.display = "none";
+	}
+}
+
+function openCustomerPopup() {
+	document.getElementById("customerPopup").style.display = "flex";
+
+	const saved = JSON.parse(localStorage.getItem("customerDetails") || "{}");
+
+	if (saved) {
+		document.getElementById("custFirstName").value = saved.firstName || "";
+		document.getElementById("custLastName").value = saved.lastName || "";
+		document.getElementById("custMobile").value = saved.mobile || "";
+		document.getElementById("custAddress").value = saved.address || "";
+		document.getElementById("custApartment").value = saved.apartment || "";
+		document.getElementById("custCity").value = saved.city || "";
+
+		if (saved.emirate) {
+			document.getElementById("custEmirate").value = saved.emirate;
+		}
+
+		// auto-check checkbox if data exists
+		document.getElementById("saveInfo").checked = true;
+	}
+}
+
+function closeCustomerPopup() {
+	document.getElementById("customerPopup").style.display = "none";
+}
+
+function submitCustomerDetails() {
+	const firstName = document.getElementById("custFirstName").value.trim();
+	const lastName = document.getElementById("custLastName").value.trim();
+	const mobile = document.getElementById("custMobile").value.trim();
+	const address = document.getElementById("custAddress").value.trim();
+	const apartment = document.getElementById("custApartment").value.trim();
+	const emirate = document.getElementById("custEmirate").value;
+	const city = document.getElementById("custCity").value;
+	const post = document.getElementById("custPost").value.trim();
+
+	if (!firstName || !mobile || !address || !city) {
+		showToast("Please fill required fields", "error");
+		return;
+	}
+	const saveInfo = document.getElementById("saveInfo").checked;
+
+	if (saveInfo) {
+		const customerData = {
+			firstName,
+			lastName,
+			mobile,
+			address,
+			apartment,
+			post,
+			emirate,
+			city
+		};
+
+		localStorage.setItem("customerDetails", JSON.stringify(customerData));
+	} else {
+		localStorage.removeItem("customerDetails"); // optional cleanup
+	}
+
+	const fullName = `${firstName} ${lastName}`;
+
+	const fullAddress = `Address: ${address}\nAppartment: ${apartment}\nCity: ${city}\nPost Code: ${post}\nEmirate : ${emirate}`.trim();
+
+	let cart = getCart();
+	let total = 0;
+	let whatsappText = "I'd like to place an order:\n\n*Order Summary*\n";
+
+	cart.forEach(item => {
+		let item_total = item.price * item.qty;
+		total += item_total;
+
+		whatsappText += `*${item.id}* - *${item.name}* (Size:${item.size}) x ${item.qty} - ${item_total.toFixed(2)} AED\n`;
+	});
+
+	whatsappText += `\nTotal: ${total.toFixed(2)} AED\n`;
+
+	whatsappText += `\n--------------------\n`;
+	whatsappText += `\n*Customer Information*\n\n`;
+	whatsappText += `Name: ${fullName}\n`;
+	whatsappText += `Mobile: ${mobile}\n`;
+	whatsappText += `\n*Delivery Address*\n`;
+	whatsappText += `\n${fullAddress}\n`;
+
+	const finalUrl = `https://wa.me/971507135589?text=${encodeURIComponent(whatsappText)}`;
+
+	// window.location.href = finalUrl;
+	window.open(finalUrl, '_blank');
+}
+
+$(document).ready(function() {
+	$('#custCountry').select2({
+		placeholder: "Search your country",
+		allowClear: true
+	});
+});
+
+const country = document.getElementById("custCountry");
+const emirate = document.getElementById("custEmirate");
+
+function toggleEmirate() {
+	if (country.value === "United Arab Emirates") {
+		emirate.disabled = false;
+	} else {
+		emirate.disabled = true;
+		emirate.selectedIndex = 0;
+	}
+}
+
+country.addEventListener("change", function () {
+	toggleEmirate();
+});
+
+toggleEmirate(); // Initial check on page load

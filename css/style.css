@@ -2378,3 +2378,399 @@ body>.skiptranslate, .goog-logo-link, .gskiptranslate, .goog-te-gadget span, .go
     margin: 0px 0 !important;
 }
 
+
+.popup-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.5);
+	display: none;
+	justify-content: center;
+	align-items: center;
+	z-index: 999999;
+}
+
+.popup-box.modern {
+	background: #fff;
+	width: 420px;
+	max-width: 95%;
+	padding: 25px;
+	border-radius: 16px;
+	font-family: 'Inter', sans-serif;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.popup-title {
+	font-size: 22px;
+	font-weight: 600;
+	margin-bottom: 20px;
+}
+
+.form-group select,
+.popup-box input,
+.popup-box textarea,
+.popup-box select {
+	width: 100%;
+	padding: 12px 14px;
+	margin-bottom: 12px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	font-size: 14px;
+	transition: 0.2s;
+}
+
+.popup-box input:focus,
+.popup-box textarea:focus,
+.popup-box select:focus {
+	border-color: #000;
+	outline: none;
+}
+
+/* .row {
+	display: flex;
+	gap: 10px;
+}
+
+.row input,
+.row select {
+	flex: 1;
+} */
+
+.checkbox {
+	display: flex;
+	align-items: center;
+	font-size: 13px;
+	margin: 10px 0;
+	gap: 8px;
+}
+
+.popup-actions.modern {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 15px;
+}
+
+.btn {
+	padding: 12px 16px;
+	border-radius: 10px;
+	border: none;
+	cursor: pointer;
+	font-weight: 500;
+}
+
+.btn.primary {
+	background: #8B5E3C;
+	/* brown like reference */
+	color: #fff;
+	flex: 1;
+}
+
+.btn.secondary {
+	background: #eee;
+	margin-left: 10px;
+}
+
+/* MODAL */
+.cart-modal {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.5);
+	display: none;
+	align-items: center;
+	justify-content: center;
+	z-index: 999;
+}
+
+.cart-content {
+	background: #fff;
+	width: 500px;
+	max-height: 80vh;
+	border-radius: 12px;
+	overflow-y: auto;
+	animation: scaleIn .3s ease;
+	padding: 15px;
+}
+
+/* HEADER */
+.cart-header {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 15px;
+}
+
+.close-btn {
+	cursor: pointer;
+	font-size: 22px;
+}
+
+/* CART ITEMS */
+.cart-item {
+	display: flex;
+	gap: 15px;
+	margin-bottom: 20px;
+}
+
+.cart-gallery {
+	width: 80px;
+}
+
+.main-img {
+	width: 60px;
+	height: 79px;
+	border-radius: 10px;
+	object-fit: cover;
+}
+
+.item-info {
+	flex: 1;
+}
+
+.qty {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 5px;
+}
+
+.qty button {
+	width: 25px;
+	height: 25px;
+	cursor: pointer;
+}
+
+.remove {
+	font-size: 20px;
+	cursor: pointer;
+	color: red;
+}
+
+/* FOOTER */
+.cart-footer {
+	border-top: 1px solid #eee;
+	padding-top: 15px;
+}
+
+.total {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 10px;
+	color: #000;
+}
+
+.checkout-btn {
+	width: 100%;
+	padding: 12px;
+	background: linear-gradient(45deg, #F7EF8A, #D2AC47, #F7EF8A, #F7EF8A, #D2AC47, #F7EF8A, #F7EF8A, #F7EF8A, #D2AC47, #F7EF8A);
+	color: #fff;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+}
+
+/* ANIMATION */
+@keyframes scaleIn {
+	from {
+		transform: scale(.8);
+		opacity: 0;
+	}
+
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+.cart-icon {
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.cart-icon svg {
+	width: 18px;
+	/* small size */
+	height: 18px;
+	/* small size */
+	color: #111;
+}
+
+.cart-icon span {
+	position: absolute;
+	top: 2px;
+	right: -4px;
+	background: #e63946;
+	color: #fff;
+	font-size: 8px;
+	font-weight: bold;
+	width: 11px;
+	height: 11px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+
+.icon-only-btn {
+	background: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+	color: #000;
+	/* icon color */
+}
+
+.icon-only-btn:hover {
+	color: #ffc107;
+}
+
+.see-more-btn {
+	background-color: #f3e3d3;
+	/* light beige */
+	color: #1f4d3a;
+	/* dark green text */
+	border: none;
+	padding: 12px 40px;
+	font-size: 16px;
+	font-weight: 500;
+	cursor: pointer;
+	border-radius: 2px;
+	/* very slight rounding */
+	letter-spacing: 0.5px;
+}
+
+.see-more-btn:hover {
+	opacity: 0.9;
+}
+
+.price-qty {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 6px;
+}
+
+.price {
+	margin: 0;
+	display: flex;
+	align-items: center;
+	font-size: 17px;
+	color: black;
+}
+
+.qty {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.modern-qty {
+	display: inline-flex;
+	align-items: center;
+	background: #f4f4f4;
+	border-radius: 999px;
+	padding: 2px;
+	gap: 2px;
+}
+
+.modern-qty button {
+	width: 28px;
+	height: 31px;
+	border-radius: 50%;
+	border: none;
+	background: #fff;
+	color: #111;
+	font-size: 18px;
+	font-weight: 500;
+	cursor: pointer;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+	transition: all 0.2s ease;
+}
+
+.modern-qty button:hover {
+	background: #111;
+	color: #fff;
+}
+
+.modern-qty .qty-num {
+	min-width: 22px;
+	text-align: center;
+	font-weight: 600;
+	font-size: 14px;
+	color: #111;
+}
+
+.custom-qty {
+	display: inline-flex;
+	align-items: center;
+	background: #f4f4f4;
+	border-radius: 999px;
+	padding: 0px;
+	gap: 4px;
+	height: 23px;
+}
+
+.custom-qty button {
+	width: 23px;
+	height: 23px;
+	border-radius: 50%;
+	border: none;
+	background: #fff;
+	color: #111;
+	font-size: 12px;
+	font-weight: bolder;
+	cursor: pointer;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+	transition: all 0.2s ease;
+}
+
+.custom-qty button:hover {
+	background: #111;
+	color: #fff;
+}
+
+.custom-qty .custom-qty-num {
+	min-width: 22px;
+	text-align: center;
+	font-weight: 600;
+	font-size: 14px;
+	color: #111;
+}
+
+.size-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-family: 'Poppins', sans-serif;
+}
+
+.size-text {
+	font-size: 12px;
+	font-weight: 500;
+}
+
+.size-dropdown {
+	padding: 4px 2px;
+	border: 1px solid #ddd;
+	border-radius: 6px;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.size-dropdown:focus {
+	outline: none;
+	border-color: black;
+}
+
+.userlogin-button {
+	text-align: center;
+	width: 100%;
+	padding: 0.5rem;
+	color: black;
+	font-weight: 600;
+	font-size: 14px;
+	cursor: pointer;
+	border-radius: 2em / 5em;
+	border: none;
+	background: linear-gradient(45deg, #D2AC47 0%, #F7EF8A 71%);
+}
