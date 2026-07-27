@@ -18652,8 +18652,8 @@ button:active {
 }
 
 .size-circle {
-	width: 42px;
-	height: 42px;
+	width: 62px;
+	height: 62px;
 	border-radius: 50%;
 	border: 2px solid #e0cbb0;
 	display: flex;
@@ -18663,6 +18663,7 @@ button:active {
 	font-weight: 500;
 	color: #555;
 	transition: .3s;
+	font-size: 14.5px;
 }
 
 .size-circle:hover {
