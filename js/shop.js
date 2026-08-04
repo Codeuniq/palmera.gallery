@@ -32,9 +32,45 @@ function load_items() {
 				renderSubcategoryPills(cat);
 				renderProducts(cat, "all");
 			});
+
+			activateCategoryFromURL();
 		},
 		error: err => console.error("API Error", err)
 	});
+}
+
+/* IF WE ARRIVED FROM item-details.html, OPEN THE TAB/SUBCAT WE CAME FROM */
+function activateCategoryFromURL() {
+	const params = new URLSearchParams(window.location.search);
+	const cat = params.get("category");
+	const subcat = params.get("subcat");
+
+	if (!cat) return;
+
+	const tabPane = document.getElementById(cat);
+	const tabLink = document.querySelector(`.nav-tabs a[href="#${cat}"]`);
+	if (!tabPane || !tabLink) return;
+
+	document.querySelectorAll(".nav-tabs .nav-link").forEach(link => link.classList.remove("active"));
+	document.querySelectorAll(".tab-pane").forEach(pane => pane.classList.remove("show", "active"));
+
+	tabLink.classList.add("active");
+	tabPane.classList.add("show", "active");
+
+	if (subcat) {
+		const pillsEl = document.getElementById(`${cat}_subcats`);
+		const pillBtn = pillsEl
+			? Array.from(pillsEl.querySelectorAll(".subcat-pill")).find(p => p.dataset.subcat === subcat)
+			: null;
+
+		if (pillBtn) {
+			pillsEl.querySelectorAll(".subcat-pill").forEach(p => p.classList.remove("active"));
+			pillBtn.classList.add("active");
+			filterBySubcategory(cat, subcat, pillBtn);
+		}
+	}
+
+	tabPane.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 /* RENDER SUB-CATEGORY PILLS FOR A TAB */
@@ -98,6 +134,7 @@ function productCardTemplate(product, index) {
 	const item_code = product.name || "";
 	const item_name = product.item_name || "";
 	const item_subcat = product.item_sub_category || "";
+	const item_category = (product.item_category || "").toLowerCase();
 
 	const images = product.images?.length
 		? product.images
@@ -144,7 +181,7 @@ function productCardTemplate(product, index) {
 					</p>
 				</div>
 			</div>
-			<div class="text p-2 pt-0" onclick="window.location.href='item-details.html?code=${encodeURIComponent(item_code).replace(/'/g, "%27")}'" style="cursor:pointer;">
+			<div class="text p-2 pt-0" onclick="window.location.href='item-details.html?code=${encodeURIComponent(item_code).replace(/'/g, "%27")}&category=${encodeURIComponent(item_category)}${item_subcat ? '&subcat=' + encodeURIComponent(item_subcat).replace(/'/g, "%27") : ''}'" style="cursor:pointer;">
 				<h2 style="display:none;">${item_code}</h2>
 				<h3>${item_name}</h3>
 				<div class="d-flex margb">

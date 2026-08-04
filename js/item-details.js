@@ -1,8 +1,23 @@
 const API_BASE_URL = CONFIG.API_BASE_URL;
-const code = new URLSearchParams(window.location.search).get('code');
+const urlParams = new URLSearchParams(window.location.search);
+const code = urlParams.get('code');
+const category = urlParams.get('category');
+const subcat = urlParams.get('subcat');
 
 let quantity = 1;
 let img, zoom; // Declare here, assign AFTER HTML is injected
+
+/* SET "BACK TO PRODUCTS" LINK TO GO BACK TO THE CATEGORY/SUBCAT WE CAME FROM */
+document.addEventListener('DOMContentLoaded', function () {
+	const backLink = document.getElementById('backToShopLink');
+	if (!backLink) return;
+
+	if (category) {
+		let backUrl = `shop.html?category=${encodeURIComponent(category)}`;
+		if (subcat) backUrl += `&subcat=${encodeURIComponent(subcat)}`;
+		backLink.href = backUrl;
+	}
+});
 
 function load_item_details() {
 	updateCartCount();
@@ -481,6 +496,8 @@ function productCardTemplate(product, index) {
 	const price = product.item_price || "0.00";
 	const item_code = product.name || "";
 	const item_name = product.item_name || "";
+	const item_category = (product.item_category || category || "").toLowerCase();
+	const item_subcat = product.item_sub_category || "";
 
 	const images = product.images?.length
 		? product.images
@@ -510,7 +527,7 @@ function productCardTemplate(product, index) {
 					</p>
 				</div>
 			</div>
-			<div class="text p-2 pt-0" onclick="window.location.href='item-details.html?code=${encodeURIComponent(item_code).replace(/'/g, "%27")}'" style="cursor:pointer;">
+			<div class="text p-2 pt-0" onclick="window.location.href='item-details.html?code=${encodeURIComponent(item_code).replace(/'/g, "%27")}&category=${encodeURIComponent(item_category)}${item_subcat ? '&subcat=' + encodeURIComponent(item_subcat).replace(/'/g, "%27") : ''}'" style="cursor:pointer;">
 				<h2 style="display:none;">${item_code}</h2>
 				<h3>${item_name}</h3>
 				<div class="d-flex margb">
