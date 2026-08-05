@@ -466,7 +466,7 @@ function productDetailsTemplate(product) {
 			<div class="buy-row">
 				<button class="buy-btn" onclick="add_to_cart(this);" id="addToCartBtn" disabled>Add to Cart</button>
 			</div>
-			<div class="price">${price} <img src="images/aed.webp" style="height:17px; margin-left:5px; padding-right:2px;"/></div>
+			<div class="price"><img src="images/aed.webp" style="height:18px; margin-left:5px; padding-right:2px;"/> &nbsp;${price} </div>
 			<p class="tax">Taxes are included.</p>
 		</div>
 	`;
@@ -521,7 +521,7 @@ function productCardTemplate(product, index) {
 				<div class="pricing">
 					<p class="price">
 						<span>
-							<img src="images/aed.webp" style="height:12px; margin-top:-2px; padding-right:2px;" />
+							<img src="images/aed.webp" style="height:16px; margin-top:-2px; padding-right:2px;" />
 							${price}
 						</span>
 					</p>
