@@ -175,7 +175,7 @@ function productCardTemplate(product, index) {
 				<div class="pricing">
 					<p class="price">
 						<span>
-							<img src="images/aed.webp" style="height:12px; margin-top:-2px; padding-right:2px;" />
+							<img src="images/aed.webp" style="height:13px; margin-top:-2px; padding-right:2px;" />
 							${price}
 						</span>
 					</p>
@@ -285,7 +285,7 @@ function renderCart() {
 				<h5 style="color: #000;">Size : ${item.size}</h5>
 				<div class="price-qty">
 					<p class="price">
-						<img src="images/aed.webp" style="height:15px;margin-top:-4px;padding-right:2px;">
+						<img src="images/aed.webp" style="height:13px;margin-top:-4px;padding-right:2px;">
 						<span>${item.price.toFixed(2)}</span>
 					</p>
 
@@ -303,7 +303,7 @@ function renderCart() {
 	});
 
 	totalEl.innerHTML = `
-	  <img src="images/aed.webp" style="height:12px;margin-top:-4px;padding-right:2px;">
+	  <img src="images/aed.webp" style="height:13px;margin-top:-4px;padding-right:2px;">
 	  ${total.toFixed(2)}
 	`;
 

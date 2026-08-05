@@ -11856,7 +11856,7 @@ h5,
 	padding-left: 20px;
 	padding-right: 20px;
 	font-weight: 500;
-	color: #000;
+	color: #fff;
 	/* text-transform: uppercase; */
 	letter-spacing: 1px;
 	opacity: 1 !important;
@@ -12023,7 +12023,7 @@ h5,
 
 .ftco-navbar-light.scrolled .nav-item .dropdown-menu .dropdown-item {
 	font-size: 14px;
-	color: #000000;
+	color: #fff;
 }
 
 .ftco-navbar-light.scrolled .nav-item .dropdown-menu .dropdown-item:hover,
@@ -12096,7 +12096,7 @@ h5,
 }
 
 .ftco-navbar-light.scrolled .navbar-brand {
-	color: #000000;
+	color: #fff;
 }
 
 .navbar-brand {
