@@ -2,6 +2,16 @@
 <html lang="en">
 
 <head>
+	<!-- Google Tag Manager -->
+	<script>(function (w, d, s, l, i) {
+			w[l] = w[l] || []; w[l].push({
+				'gtm.start':
+					new Date().getTime(), event: 'gtm.js'
+			}); var f = d.getElementsByTagName(s)[0],
+				j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+					'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+		})(window, document, 'script', 'dataLayer', 'GTM-WC52BR3L');</script>
+	<!-- End Google Tag Manager -->
 	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6345949850114046"
 		crossorigin="anonymous">
 		</script>
@@ -49,6 +59,10 @@
 
 
 <body class="goto-here" onload="load_items()">
+	<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WC52BR3L" height="0" width="0"
+			style="display:none;visibility:hidden"></iframe></noscript>
+	<!-- End Google Tag Manager (noscript) -->
 	<!-- Preloader Start-->
 	<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
 		<div class="container-fluid">
@@ -167,7 +181,7 @@
 			<div class="form-group">
 				<select id="custCountry" style="width:100%">
 					<option value="" selected>Select Country</option>
-<!-- 
+					<!-- 
 					<option>Afghanistan</option>
 					<option>Albania</option>
 					<option>Algeria</option>
@@ -350,56 +364,56 @@
 			</div>
 
 			<div class="d-flex" style="gap:10px;">
+				<div class="field-wrap required-field">
+					<input type="text" id="custFirstName" placeholder="First name" required>
+				</div>
+				<div class="field-wrap">
+					<input type="text" id="custLastName" placeholder="Last name">
+				</div>
+			</div>
+
 			<div class="field-wrap required-field">
-				<input type="text" id="custFirstName" placeholder="First name" required>
+				<input type="text" id="custAddress" placeholder="Address" required>
 			</div>
+
 			<div class="field-wrap">
-				<input type="text" id="custLastName" placeholder="Last name">
+				<input type="text" id="custApartment" placeholder="Apartment, suite, etc. (optional)">
 			</div>
-		</div>
 
-		<div class="field-wrap required-field">
-			<input type="text" id="custAddress" placeholder="Address" required>
-		</div>
-
-		<div class="field-wrap">
-			<input type="text" id="custApartment" placeholder="Apartment, suite, etc. (optional)">
-		</div>
-
-		<div class="d-flex" style="gap:10px;">
-			<div class="field-wrap">
-				<select id="custEmirate">
-					<option value="" selected>Select Emirate</option>
-					<option value="Dubai">Dubai</option>
-					<option value="Abu Dhabi">Abu Dhabi</option>
-					<option value="Sharjah">Sharjah</option>
-					<option value="Ajman">Ajman</option>
-					<option value="Umm Al Quwain">Umm Al Quwain</option>
-					<option value="Ras Al Khaimah">Ras Al Khaimah</option>
-					<option value="Fujairah">Fujairah</option>
-				</select>
+			<div class="d-flex" style="gap:10px;">
+				<div class="field-wrap">
+					<select id="custEmirate">
+						<option value="" selected>Select Emirate</option>
+						<option value="Dubai">Dubai</option>
+						<option value="Abu Dhabi">Abu Dhabi</option>
+						<option value="Sharjah">Sharjah</option>
+						<option value="Ajman">Ajman</option>
+						<option value="Umm Al Quwain">Umm Al Quwain</option>
+						<option value="Ras Al Khaimah">Ras Al Khaimah</option>
+						<option value="Fujairah">Fujairah</option>
+					</select>
+				</div>
+				<div class="field-wrap">
+					<input type="text" id="custPost" placeholder="Post Code">
+				</div>
 			</div>
-			<div class="field-wrap">
-				<input type="text" id="custPost" placeholder="Post Code">
+
+			<div class="field-wrap required-field">
+				<input type="text" id="custCity" placeholder="City" required>
 			</div>
-		</div>
 
-		<div class="field-wrap required-field">
-			<input type="text" id="custCity" placeholder="City" required>
-		</div>
+			<div class="field-wrap required-field">
+				<input type="text" id="custMobile" placeholder="Phone" required>
+			</div>
 
-		<div class="field-wrap required-field">
-			<input type="text" id="custMobile" placeholder="Phone" required>
-		</div>
+			<label class="checkbox">
+				<input type="checkbox" id="saveInfo"> Save this information for next time
+			</label>
 
-		<label class="checkbox">
-			<input type="checkbox" id="saveInfo"> Save this information for next time
-		</label>
-
-		<div class="popup-actions modern">
-			<button class="btn primary" onclick="submitCustomerDetails()">Continue</button>
-			<button class="btn secondary" onclick="closeCustomerPopup()">Cancel</button>
-		</div>
+			<div class="popup-actions modern">
+				<button class="btn primary" onclick="submitCustomerDetails()">Continue</button>
+				<button class="btn secondary" onclick="closeCustomerPopup()">Cancel</button>
+			</div>
 
 		</div>
 	</div>
