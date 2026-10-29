@@ -253,7 +253,9 @@ function closeCart() {
 function renderCart() {
 	const cart = getCart();
 	const container = document.querySelector(".cart-items");
-	const totalEl = document.querySelector(".cart-footer .total strong");
+	const totalEl = document.querySelector("#cartGrandTotal strong");
+	const summaryEl = document.querySelector(".cart-summary");
+	const noteEl = document.querySelector(".free-ship-note");
 	const checkoutBtn = document.getElementById("checkout");
 
 	container.innerHTML = "";
@@ -262,6 +264,8 @@ function renderCart() {
 	if (!cart.length) {
 		container.innerHTML = "<p style='text-align:center'>Cart is empty</p>";
 		totalEl.innerHTML = "0.00";
+		summaryEl.innerHTML = "";
+		noteEl.innerHTML = "";
 		checkoutBtn.style.pointerEvents = "none";  // ← disable
 		checkoutBtn.style.opacity = "0.4";          // ← dim it
 		return;
@@ -302,10 +306,29 @@ function renderCart() {
 	  `;
 	});
 
-	totalEl.innerHTML = `
-	  <img src="images/aed.webp" style="height:13px;margin-top:-4px;padding-right:2px;">
-	  ${total.toFixed(2)}
+	const delivery = getDeliveryCharge(total);
+	const aedIcon = `<img src="images/aed.webp" style="height:13px;margin-top:-4px;padding-right:2px;">`;
+
+	summaryEl.innerHTML = `
+		<div class="total">
+			<span>Subtotal</span>
+			<strong>${aedIcon}${total.toFixed(2)}</strong>
+		</div>
+		<div class="total">
+			<span>Delivery</span>
+			<strong>${delivery > 0
+			? `${aedIcon}${delivery.toFixed(2)}`
+			: `<span style="color:#1a7f37;">FREE</span>`}</strong>
+		</div>
 	`;
+
+	totalEl.innerHTML = `${aedIcon}${(total + delivery).toFixed(2)}`;
+
+	noteEl.innerHTML = delivery > 0
+		? `<div style="background:#FFF4E5;border-left:3px solid #D2AC47;border-radius:4px;padding:8px 10px;margin-bottom:10px;font-size:12px;color:#000;">
+				Add another ${(DELIVERY.FREE_ABOVE - total).toFixed(2)} AED to get free delivery
+		   </div>`
+		: "";
 
 	document.getElementById("checkout").onclick = function (e) {
 		e.preventDefault();
@@ -426,7 +449,13 @@ function submitCustomerDetails() {
 		whatsappText += `*${item.id}* - *${item.name}* (Size:${item.size}) x ${item.qty} - ${item_total.toFixed(2)} AED\n`;
 	});
 
-	whatsappText += `\nTotal: ${total.toFixed(2)} AED\n`;
+	const delivery = getDeliveryCharge(total);
+
+	whatsappText += `\nSubtotal: ${total.toFixed(2)} AED\n`;
+	if (delivery > 0) {
+		whatsappText += `Delivery: ${delivery.toFixed(2)} AED\n`;
+	}
+	whatsappText += `Total: ${(total + delivery).toFixed(2)} AED\n`;
 
 	whatsappText += `\n--------------------\n`;
 	whatsappText += `\n*Customer Information*\n\n`;
