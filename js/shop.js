@@ -250,90 +250,120 @@ function closeCart() {
 	document.getElementById("cartModal").style.display = "none";
 }
 
+
+
 function renderCart() {
-	const cart = getCart();
-	const container = document.querySelector(".cart-items");
-	const totalEl = document.querySelector("#cartGrandTotal strong");
-	const summaryEl = document.querySelector(".cart-summary");
-	const noteEl = document.querySelector(".free-ship-note");
-	const checkoutBtn = document.getElementById("checkout");
+    const cart = getCart();
+    const container = document.querySelector(".cart-items");
+    const totalEl = document.querySelector("#cartGrandTotal strong");
+    const summaryEl = document.querySelector(".cart-summary");
+    const noteEl = document.querySelector(".free-ship-note");
+    const checkoutBtn = document.getElementById("checkout");
 
-	container.innerHTML = "";
-	let total = 0;
+    container.innerHTML = "";
+    let total = 0;
 
-	if (!cart.length) {
-		container.innerHTML = "<p style='text-align:center'>Cart is empty</p>";
-		totalEl.innerHTML = "0.00";
-		summaryEl.innerHTML = "";
-		noteEl.innerHTML = "";
-		checkoutBtn.style.pointerEvents = "none";  // ← disable
-		checkoutBtn.style.opacity = "0.4";          // ← dim it
-		return;
-	}
-	// Re-enable when cart has items
-	checkoutBtn.style.pointerEvents = "auto";
-	checkoutBtn.style.opacity = "1";
+    if (!cart.length) {
+        container.innerHTML = "<p style='text-align:center'>Cart is empty</p>";
+        totalEl.innerHTML = "0.00";
+        summaryEl.innerHTML = "";
+        noteEl.innerHTML = "";
+        checkoutBtn.style.pointerEvents = "none";
+        checkoutBtn.style.opacity = "0.4";
+        return;
+    }
 
-	cart.forEach((item, index) => {
-		let item_total = item.price * item.qty;
-		total += item_total;
+    // Re-enable checkout when cart has items
+    checkoutBtn.style.pointerEvents = "auto";
+    checkoutBtn.style.opacity = "1";
 
-		container.innerHTML += `
-		<div class="cart-item">
-			<div class="cart-gallery">
-				<img src="${item.image}" class="main-img">
-			</div>
+    cart.forEach((item, index) => {
+        let item_total = item.price * item.qty;
+        total += item_total;
 
-			<div class="item-info">
-				<h4>${item.name}</h4>
-				<h5 style="color: #000;">Size : ${item.size}</h5>
-				<div class="price-qty">
-					<p class="price">
-						<img src="images/aed.webp" style="height:13px;margin-top:-4px;padding-right:2px;">
-						<span>${item.price.toFixed(2)}</span>
-					</p>
+        container.innerHTML += `
+        <div class="cart-item">
+            <div class="cart-gallery">
+                <img src="${item.image}" class="main-img">
+            </div>
 
-					<div class="qty modern-qty">
-						<button onclick="updateQty(${index}, -1)">-</button>
-						<span class="qty-num">${item.qty}</span>
-						<button onclick="updateQty(${index}, 1)">+</button>
-					</div>
-				</div>
-			</div>
+            <div class="item-info">
+                <h4>${item.name}</h4>
+                <h5 style="color: #000;">Size : ${item.size}</h5>
+                <div class="price-qty">
+                    <p class="price">
+                        <img src="images/aed.webp" style="height:13px;margin-top:-4px;padding-right:2px;">
+                        <span>${item.price.toFixed(2)}</span>
+                    </p>
 
-		  <span class="remove" onclick="removeItem(${index})">&times;</span>
-		</div>
-	  `;
-	});
+                    <div class="qty modern-qty">
+                        <button onclick="updateQty(${index}, -1)">-</button>
+                        <span class="qty-num">${item.qty}</span>
+                        <button onclick="updateQty(${index}, 1)">+</button>
+                    </div>
+                </div>
+            </div>
 
-	const delivery = getDeliveryCharge(total);
-	const aedIcon = `<img src="images/aed.webp" style="height:13px;margin-top:-4px;padding-right:2px;">`;
+            <span class="remove" onclick="removeItem(${index})">&times;</span>
+        </div>
+        `;
+    });
 
-	summaryEl.innerHTML = `
-		<div class="total">
-			<span>Subtotal</span>
-			<strong>${aedIcon}${total.toFixed(2)}</strong>
-		</div>
-		<div class="total">
-			<span>Delivery</span>
-			<strong>${delivery > 0
-			? `${aedIcon}${delivery.toFixed(2)}`
-			: `<span style="color:#1a7f37;">FREE</span>`}</strong>
-		</div>
-	`;
+    // Delivery calculation
+    const delivery = getDeliveryCharge(total);
 
-	totalEl.innerHTML = `${aedIcon}${(total + delivery).toFixed(2)}`;
+    // National Day Special Offer
+    const discount = getNationalDayDiscount(total);
 
-	noteEl.innerHTML = delivery > 0
-		? `<div style="background:#FFF4E5;border-left:3px solid #D2AC47;border-radius:4px;padding:8px 10px;margin-bottom:10px;font-size:12px;color:#000;">
-				Add another ${(DELIVERY.FREE_ABOVE - total).toFixed(2)} AED to get free delivery
-		   </div>`
-		: "";
+    // Final payable amount
+    const grandTotal = total + delivery - discount;
 
-	document.getElementById("checkout").onclick = function (e) {
-		e.preventDefault();
-		openCustomerPopup();
-	};
+    const aedIcon = `<img src="images/aed.webp" style="height:13px;margin-top:-4px;padding-right:2px;">`;
+
+    // National Day Offer Balance
+    const offerBalance = Math.max(0, NATIONAL_DAY_OFFER.MINIMUM - total);
+
+    // Cart Summary
+    summaryEl.innerHTML = `
+        <div class="total">
+            <span>Subtotal</span>
+            <strong>${aedIcon}${total.toFixed(2)}</strong>
+        </div>
+
+        <div class="total">
+            <span>National Day Special Offer</span>
+            <strong style="color:#1a7f37;">
+                ${discount > 0
+                    ? `- ${aedIcon}${discount.toFixed(2)}`
+                    : `Add ${aedIcon}${offerBalance.toFixed(2)} more`}
+            </strong>
+        </div>
+
+        <div class="total">
+            <span>Delivery</span>
+            <strong>
+                ${delivery > 0
+                    ? `${aedIcon}${delivery.toFixed(2)}`
+                    : `<span style="color:#1a7f37;">FREE</span>`}
+            </strong>
+        </div>
+    `;
+
+    // Grand Total
+    totalEl.innerHTML = `${aedIcon}${grandTotal.toFixed(2)}`;
+
+    // Free Delivery Message
+    noteEl.innerHTML = delivery > 0
+        ? `<div style="background:#FFF4E5;border-left:3px solid #D2AC47;border-radius:4px;padding:8px 10px;margin-bottom:10px;font-size:12px;color:#000;">
+                Add another ${(DELIVERY.FREE_ABOVE - total).toFixed(2)} AED to get free delivery
+           </div>`
+        : "";
+
+    // Checkout Button
+    checkoutBtn.onclick = function (e) {
+        e.preventDefault();
+        openCustomerPopup();
+    };
 }
 
 function updateQty(index, change) {
@@ -401,74 +431,94 @@ function closeCustomerPopup() {
 	document.getElementById("customerPopup").style.display = "none";
 }
 
+
 function submitCustomerDetails() {
-	const firstName = document.getElementById("custFirstName").value.trim();
-	const lastName = document.getElementById("custLastName").value.trim();
-	const mobile = document.getElementById("custMobile").value.trim();
-	const address = document.getElementById("custAddress").value.trim();
-	const apartment = document.getElementById("custApartment").value.trim();
-	const emirate = document.getElementById("custEmirate").value;
-	const city = document.getElementById("custCity").value;
-	const post = document.getElementById("custPost").value.trim();
+    const firstName = document.getElementById("custFirstName").value.trim();
+    const lastName = document.getElementById("custLastName").value.trim();
+    const mobile = document.getElementById("custMobile").value.trim();
+    const address = document.getElementById("custAddress").value.trim();
+    const apartment = document.getElementById("custApartment").value.trim();
+    const emirate = document.getElementById("custEmirate").value;
+    const city = document.getElementById("custCity").value;
+    const post = document.getElementById("custPost").value.trim();
 
-	if (!firstName || !mobile || !address || !city) {
-		showToast("Please fill required fields", "error");
-		return;
-	}
-	const saveInfo = document.getElementById("saveInfo").checked;
+    if (!firstName || !mobile || !address || !city) {
+        showToast("Please fill required fields", "error");
+        return;
+    }
 
-	if (saveInfo) {
-		const customerData = {
-			firstName,
-			lastName,
-			mobile,
-			address,
-			apartment,
-			post,
-			emirate,
-			city
-		};
+    const saveInfo = document.getElementById("saveInfo").checked;
 
-		localStorage.setItem("customerDetails", JSON.stringify(customerData));
-	} else {
-		localStorage.removeItem("customerDetails"); // optional cleanup
-	}
+    if (saveInfo) {
+        const customerData = {
+            firstName,
+            lastName,
+            mobile,
+            address,
+            apartment,
+            post,
+            emirate,
+            city
+        };
 
-	const fullName = `${firstName} ${lastName}`;
+        localStorage.setItem("customerDetails", JSON.stringify(customerData));
+    } else {
+        localStorage.removeItem("customerDetails");
+    }
 
-	const fullAddress = `Address: ${address}\nAppartment: ${apartment}\nCity: ${city}\nPost Code: ${post}\nEmirate : ${emirate}`.trim();
+    const fullName = `${firstName} ${lastName}`;
 
-	let cart = getCart();
-	let total = 0;
-	let whatsappText = "I'd like to place an order:\n\n*Order Summary*\n";
+    const fullAddress = `Address: ${address}\nApartment: ${apartment}\nCity: ${city}\nPost Code: ${post}\nEmirate: ${emirate}`.trim();
 
-	cart.forEach(item => {
-		let item_total = item.price * item.qty;
-		total += item_total;
+    let cart = getCart();
+    let total = 0;
 
-		whatsappText += `*${item.id}* - *${item.name}* (Size:${item.size}) x ${item.qty} - ${item_total.toFixed(2)} AED\n`;
-	});
+    let whatsappText = "I'd like to place an order:\n\n*Order Summary*\n";
 
-	const delivery = getDeliveryCharge(total);
+    cart.forEach(item => {
+        let item_total = item.price * item.qty;
+        total += item_total;
 
-	whatsappText += `\nSubtotal: ${total.toFixed(2)} AED\n`;
-	if (delivery > 0) {
-		whatsappText += `Delivery: ${delivery.toFixed(2)} AED\n`;
-	}
-	whatsappText += `Total: ${(total + delivery).toFixed(2)} AED\n`;
+        whatsappText += `*${item.id}* - *${item.name}* (Size: ${item.size}) x ${item.qty} - ${item_total.toFixed(2)} AED\n`;
+    });
 
-	whatsappText += `\n--------------------\n`;
-	whatsappText += `\n*Customer Information*\n\n`;
-	whatsappText += `Name: ${fullName}\n`;
-	whatsappText += `Mobile: ${mobile}\n`;
-	whatsappText += `\n*Delivery Address*\n`;
-	whatsappText += `\n${fullAddress}\n`;
+    // Delivery calculation
+    const delivery = getDeliveryCharge(total);
 
-	const finalUrl = `https://wa.me/971507135589?text=${encodeURIComponent(whatsappText)}`;
+    // National Day Special Discount
+    const discount = getNationalDayDiscount(total);
 
-	// window.location.href = finalUrl;
-	window.open(finalUrl, '_blank');
+    // Final payable amount
+    const grandTotal = total + delivery - discount;
+
+    // WhatsApp Order Summary
+    whatsappText += `\nSubtotal: ${total.toFixed(2)} AED\n`;
+
+    if (discount > 0) {
+        whatsappText += `*National Day Special Offer: -${discount.toFixed(2)} AED*\n`;
+    }
+
+    if (delivery > 0) {
+        whatsappText += `Delivery: ${delivery.toFixed(2)} AED\n`;
+    } else {
+        whatsappText += `Delivery: FREE\n`;
+    }
+
+    whatsappText += `\n*Grand Total: ${grandTotal.toFixed(2)} AED*\n`;
+
+    whatsappText += `\n--------------------\n`;
+    whatsappText += `\n*Customer Information*\n\n`;
+    whatsappText += `Name: ${fullName}\n`;
+    whatsappText += `Mobile: ${mobile}\n`;
+    whatsappText += `\n*Delivery Address*\n`;
+    whatsappText += `\n${fullAddress}\n`;
+
+    const finalUrl = `https://wa.me/971507135589?text=${encodeURIComponent(whatsappText)}`;
+
+    // Open WhatsApp
+    window.open(finalUrl, '_blank');
 }
+
 
 $(document).ready(function() {
 	$('#custCountry').select2({
